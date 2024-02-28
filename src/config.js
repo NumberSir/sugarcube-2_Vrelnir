@@ -25,6 +25,7 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 	let _historyControls  = true;
 	let _historyMaxStates = 40;
 	let _sessionMaxStates = 40;
+	let _expiredMaxStates = 100;
 
 	// Macros settings.
 	let _macrosIfAssignmentError   = true;
@@ -34,7 +35,7 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 
 	// Navigation settings.
 	let _navigationOverride;
-	let _gotoButtons = false;
+	let _navigationRememberYPos ;
 
 	// Passages settings.
 	let _passagesDescriptions;
@@ -145,6 +146,11 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 				_sessionMaxStates = value;
 			},
 
+			get maxExpired() { return _expiredMaxStates; },
+			set maxExpired(value) {
+				_expiredMaxStates = value;
+			},
+
 			// legacy
 			// Die if deprecated state history settings are accessed.
 			get mode()  { throw new Error(_errHistoryModeDeprecated); },
@@ -189,8 +195,8 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 
 				_navigationOverride = value;
 			},
-			get gotoButtons() { return _gotoButtons; },
-			set gotoButtons(value) { return _gotoButtons = !!value; }
+			get rememberYPos() { return _navigationRememberYPos; },
+			set rememberYPos(value) { _navigationRememberYPos = value; }
 		}),
 
 		/*
