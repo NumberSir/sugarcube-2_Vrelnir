@@ -9,8 +9,6 @@
 /* global clone, enumFrom */
 
 var Diff = (() => { // eslint-disable-line no-unused-vars, no-var
-	'use strict';
-
 	// Diff operations object.
 	const Op = enumFrom({
 		Delete      : 0,
@@ -61,11 +59,9 @@ var Diff = (() => { // eslint-disable-line no-unused-vars, no-var
 			const bVal = b[key];
 
 			// Key exists in `a`.
-			// if (Object.hasOwn(a, key)) {
-			if (a.hasOwnProperty(key)) {
+			if (Object.hasOwn(a, key)) {
 				// Key exists in both.
-				// if (Object.hasOwn(b, key)) {
-				if (b.hasOwnProperty(key)) {
+				if (Object.hasOwn(b, key)) {
 					// Values are exactly the same, so do nothing.
 					if (aVal === bVal) {
 						continue;

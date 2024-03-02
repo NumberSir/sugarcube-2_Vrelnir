@@ -59,6 +59,7 @@ const CONFIG = {
 			'src/macros/macro.js',
 			'src/macros/macrocontext.js',
 			'src/macros/macrolib.js',
+			'src/util/gettypeof.js',
 			'src/dialog.js',
 			'src/engine.js',
 			'src/passage.js',
