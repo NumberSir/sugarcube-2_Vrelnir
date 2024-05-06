@@ -95,7 +95,12 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	function uiOpenSaves(/* options, closeFn */ ...args) {
-		uiBuildSaves();
+		// use idb when available
+		if (idb.active) {
+			Dialog.setup('saves', 'saveList');
+			idb.saveList();
+		}
+		else uiBuildSaves();
 		Dialog.open(...args);
 	}
 
@@ -455,6 +460,15 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 					})
 					.appendTo($dialogBody);
 			}
+
+			jQuery(document.createElement('label')).attr('id', 'idbToggleSaves').append(
+			jQuery(document.createElement('input'))
+				.attr({ id : 'checkbox-idbactive', name : 'checkbox-idbactive', type : 'checkbox', checked : idb.active && !V.ironmanmode, disabled : idb.lock || V.ironmanmode })
+				.addClass('macro-checkbox')
+				.on('change.macros', () => { idb.active = document.getElementById('checkbox-idbactive').checked; document.getElementById('ui-dialog-body').className = 'saveList'; idb.saveList(); })
+		)
+			.appendTo($btnBar)
+			.append(' Enable indexedDB ');
 
 			if (savesOk) {
 				$btnBar.append(createActionItem(
