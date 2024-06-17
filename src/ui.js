@@ -491,7 +491,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 				'idbToggleSaves',
 				null,
 				'Enable indexedDB',
-				Save.autosave.has() || !Save.slots.isEmpty()
+				!idb.lock
 					? () => {
 						idb.updateSettings('active', true);
 						idb.saveList();
