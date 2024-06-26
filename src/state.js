@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, Diff, Engine, PRNGWrapper, Scripting, clone, session, storage, V */
+/* global Config, Diff, Engine, stupidrng, Scripting, clone, session, storage, V */
 
 var State = (() => { // eslint-disable-line no-unused-vars, no-var
 	'use strict';
@@ -51,9 +51,7 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		_active      = momentCreate();
 		_activeIndex = -1;
 		_expired     = [];
-		/* Have the PRNG object return a copy of the original.
-			Old: _prng = _prng === null ? null : new PRNGWrapper(_prng.seed, false); */
-		_prng        = _prng === null ? null : new PRNGWrapper(_prng.seed, { state : true });
+		_prng        = _prng === null ? null : new stupidrng(_prng.seed);
 	}
 
 	/*
@@ -280,7 +278,8 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 			if (sessionState.history.length > sstates) reduceHistorySize(sessionState, sstates);
 			if (sstates) session.set("state", sessionState); // don't do session writes if sstates is 0, NaN, undefined, etc.
 			pass = true;
-		} catch (ex) {
+		}
+		catch (ex) {
 			console.log("session.set failed, recovering");
 			if (sstates > sessionState.history.length) sstates = sessionState.length;
 			while (sstates && !pass) {
@@ -289,7 +288,8 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 					reduceHistorySize(sessionState, sstates);
 					session.set("state", sessionState);
 					pass = true;
-				} catch (ex) {
+				}
+				catch (ex) {
 					continue;
 				}
 			}
@@ -381,16 +381,7 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 			Restore the seedable PRNG.
 		*/
 		if (_prng !== null) {
-			/* Pass the PRNG-state object from the moment, if it exists, to the marshaller to create a new PRNG Object to use.
-				Old: _prng = PRNGWrapper.unmarshal({
-						 seed : _prng.seed,
-						 pull : _active.pull
-					 }); */
-			_prng = PRNGWrapper.unmarshal({
-				seed  : _prng.seed,
-				pull  : _active.pull,
-				state : _active.prng || true
-			});
+			_prng = new stupidrng(_prng.seed, _active.pull);
 		}
 
 		/*
@@ -404,6 +395,7 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 			}
 			catch { // maxSessionStates is too high to fit sessionStorage
 				console.log('session.set error, reducing maxSessionStates');
+				// eslint-disable-next-line max-len
 				if (Config.history.maxSessionStates > State.history.length) Config.history.maxSessionStates = State.history.length;
 				Config.history.maxSessionStates--;
 				if (window.Errors) { // call dol-specific errors reporter if available
@@ -547,20 +539,19 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		_history.push(momentCreate(title, _active.variables));
 
 		if (_prng) {
-			/* Assign prng state to the moment's prng property.
-				Old: historyTop().pull = _prng.pull; */
 			const top = historyTop();
 			top.pull = _prng.pull;
-			top.prng = _prng.state();
 		}
 
 		/*
 			Truncate the history, if necessary, by discarding moments from the bottom.
 		*/
 		while (historySize() > Config.history.maxStates) {
-			/* Stop the history being pushed onto _expire here.
-				Old: _expired.push(_history.shift().title); */
-			_history.shift();
+			if (Config.history.maxExpired === 0) _history.shift();
+			else {
+				_expired.push(_history.shift().title);
+			}
+			while (_expired.length > Config.history.maxExpired) _expired.shift();
 		}
 
 		/*
@@ -709,8 +700,7 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		/* Regenerate the PRNG object, then assign the state to the active moment. */
-		_prng = new PRNGWrapper(seed, { state : true, entropy : useEntropy });
-		_active.prng = _prng.state();
+		_prng = new stupidrng(seed);
 		_active.pull = _prng.pull;
 	}
 
@@ -718,33 +708,24 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		return _prng !== null;
 	}
 
+	function prngPull() {
+		return _prng ? _prng.pull : NaN;
+	}
+
 	function prngSeed() {
 		return _prng ? _prng.seed : null;
 	}
 
-	function prngPull() {
-		return _prng ? _prng.pull : null;
+	function prngPeek(count) {
+		return _prng.peek(count);
 	}
 
-	function prngState() {
-		return _prng ? _prng.state() : null;
+	function prngStr2Int(string) {
+		return _prng.str2int(string);
 	}
 
-	function prngPeek(count, callback = undefined) {
-		const values = [];
-		if (_prng) {
-			const state = _prng.state();
-			for (let i = 0; i < count; i++) {
-				if (typeof callback === 'function') {
-					values.push(callback(_prng.random()));
-				}
-				else {
-					values.push(_prng.random());
-				}
-			}
-			_prng = new PRNGWrapper(_prng.seed, { state });
-		}
-		return values;
+	function prngTest(count, granularity, advancerng) {
+		return _prng.test(count, granularity, advancerng);
 	}
 
 	function prngRandom() {
@@ -946,9 +927,11 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 			value : Object.freeze(Object.defineProperties({}, {
 				init      : { value : prngInit },
 				isEnabled : { value : prngIsEnabled },
-				seed      : { get   : prngSeed },
-				pull      : { get   : prngPull },
-				state     : { get   : prngState }
+				pull      : { get : prngPull },
+				seed      : { get : prngSeed },
+				str2int   : { value : prngStr2Int },
+				test      : { value : prngTest },
+				peek      : { value : prngPeek }
 			}))
 		},
 		random : { value : prngRandom },
