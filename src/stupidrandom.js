@@ -102,3 +102,4 @@ class stupidrng {
 		return distribution;
 	}
 }
+window.stupidrng = stupidrng;
