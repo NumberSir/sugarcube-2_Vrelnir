@@ -79,14 +79,14 @@ var l10nStrings = { // eslint-disable-line no-unused-vars, no-var
 		Saves.
 	*/
 	savesTitle       : 'Saves',
-	savesDisallowed  : 'Saving has been disallowed on this passage.',
+	savesDisallowed  : 'You can\'t save on this passage!',
 	savesIncapable   : '{_warningIntroLacking} the capabilities required to support saves, so saves have been disabled for this session.',
 	savesLabelAuto   : 'Autosave',
-	savesLabelDelete : 'Delete',
-	savesLabelExport : 'Save to Disk\u2026',
-	savesLabelImport : 'Load from Disk\u2026',
-	savesLabelLoad   : 'Load',
-	savesLabelClear  : 'Delete All Saves',
+	savesLabelDelete : 'Delete ',
+	savesLabelExport : 'Save to File\u2026',
+	savesLabelImport : 'Load from File\u2026',
+	savesLabelLoad   : 'Load ',
+	savesLabelClear  : 'Delete All',
 	savesLabelSave   : 'Save',
 	savesLabelSlot   : 'Slot',
 	savesUnavailable : 'No save slots found\u2026',
@@ -96,26 +96,27 @@ var l10nStrings = { // eslint-disable-line no-unused-vars, no-var
 		idb related
 	*/
 	savesDisallowedReplay     : 'The scene viewer is currently in use, preventing the use of the save system.',
-	savesExportReminder       : 'Saves here will be lost if your browser cache is cleared. Exporting is recommended to prevent the loss of saves from occurring.',
+	savesExportReminder       : 'Warning: If your browser cache is cleared, saves here will be lost! Consider saving to file every so often!',
 	savesHeaderSaveLoad       : 'Save/Load',
 	savesHeaderIDName         : 'ID/Name',
 	savesHeaderDetails        : 'Details',
 	savesDescTitle            : 'Title: ',
 	savesDescName             : 'Save Name: ',
 	savesDescId               : 'Save Id: ',
-	savesDescDate             : ', Date: ',
-	savesPagerJump            : ' Jump to most recent manual save ',
-	savesPagerPage            : 'Page: ',
-	savesPagerSavesPerPage    : ' Saves per page: ',
-	savesOptionsConfirmOn     : ' Require confirmation on: ',
-	savesOptionsUseLegacy     : ' Use old legacy save storage: ',
-	savesWarningSaveOnSlot    : 'Save on slot ',
-	savesWarningOverwriteSlot : 'Overwrite save in slot ',
+	savesDescDate             : 'Date: ',
+	savesPagerJump            : 'Jump to most recent manual save',
+	savesPagerPage            : 'Page:',
+	savesPagerSavesPerPage    : 'Saves per page:',
+	savesOptionsConfirmOn     : 'Require confirmation on:',
+	savesOptionsOverwrite     : 'Overwrite ',
+	savesOptionsUseLegacy     : 'Switch to legacy save storage',
+	savesWarningSaveOnSlot    : 'Save on slot',
+	savesWarningOverwriteSlot : 'Overwrite save in slot',
 	savesWarningOverwriteID   : 'Save ID does not match, continue with overwrite?',
-	savesWarningDeleteInSlot  : 'Delete save in slot ',
-	savesWarningLoad          : 'Load slot ',
+	savesWarningDeleteInSlot  : 'Delete save in slot',
+	savesWarningLoad          : 'Load slot',
 	savesWarningDeleteAll     : 'WARNING - DO YOU REALLY WANT TO DELETE ALL SAVES?',
-
+	savesLabelToClipboard     : 'Save to Clipboard\u2026',
 
 	/*
 		Settings.
@@ -153,42 +154,5 @@ var l10nStrings = { // eslint-disable-line no-unused-vars, no-var
 		Macros.
 	*/
 	macroBackText   : 'Back',  // (verb) rewind, revert
-	macroReturnText : 'Return',// (verb) go/send back
-
-	/*
-		idb_backend.js
-	 */
-	idbHtmlSaveLoadButton            : 'Save/Load',
-	idbHtmlSaveName                  : 'ID/Name',
-	idbHtmlSaveDetails               : 'Details',
-	idbHtmlClearButton               : 'Delete All',
-	idbHtmlSaveButton                : 'Save',
-	idbHtmlLoadButton                : 'Load',
-	idbHtmlDeleteButton              : 'Delete',
-	idbHtmlCancelButton              : 'Cancel',
-	idbHtmlSaveTitle                 : 'Title: ',
-	idbHtmlSaveSlotName              : 'Save Name: ',
-	idbHtmlSaveId                    : 'Save Id: ',
-	idbHtmlSaveDateTime              : 'Date: ',
-	idbCannotSaveReplayScene         : 'The scene viewer is currently in use, preventing the use of the save system.',
-	idbCannotSave                    : "You can't save here!",
-	idbSaveWillLost                  : 'Saves here will be lost if your browser cache is cleared. Exporting is recommended to prevent the loss of saves from occurring.',
-	idbLostSaves                     : 'Where are my saves?',
-	idbLostSavesTooltip              : 'If you can\'t find your saves, it\'s possible you saved them using a different storage method. Try toggling the "Use old legacy storage" option below the saves list.',
-	idbJumpToLatestButton            : ' Jump to most recent manual save ',
-	idbHtmlPager                     : 'Page: ',
-	idbHtmlPagerP                    : ' Saves per page: ',
-	idbHtmlRequireConfirmationSave   : ' Require confirmation on Save ',
-	idbHtmlRequireConfirmationLoad   : ' Require confirmation on Load ',
-	idbHtmlRequireConfirmationDelete : ' Require confirmation on Delete ',
-	idbHtmlUseLegacy                 : ' Use old legacy save storage ',
-	idbHtmlConfirmSave               : 'Save on slot ',
-	idbHtmlConfirmSaveOverwrite      : 'Overwrite save in slot ',
-	idbHtmlConfirmSaveIdNotMatch     : 'Save ID does not match, continue with overwrite?',
-	idbHtmlConfirmDelete             : 'Delete save in slot ',
-	idbHtmlConfirmDeleteAuto         : 'auto',
-	idbHtmlConfirmLoad               : 'Load slot ',
-	idbHtmlConfirmLoadAuto           : 'auto',
-	idbHtmlConfirmClearWARNING       : 'WARNING - Are you sure you would like to delete all saves?',
-	idbHtmlConfirmClearAll           : 'Clear All Saves'
+	macroReturnText : 'Return' // (verb) go/send back
 };

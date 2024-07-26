@@ -40,8 +40,20 @@
 	l10nStrings.warningDegraded       = '{_warningIntroLacking} {identity}需要的功能 {_warningOutroDegraded}';
 
 	/* Debug View. */
-	l10nStrings.debugViewTitle  = '调试模式';
-	l10nStrings.debugViewToggle = '切换调试模式';
+	l10nStrings.debugViewTitle      = '调试模式';
+	l10nStrings.debugViewToggle     = '切换调试模式';
+	l10nStrings.debugBarToggle      = '切换调试栏';
+	l10nStrings.debugBarNoWatches   = '\u2014 尚无监控组 \u2014';
+	l10nStrings.debugBarAddWatch    = '添加监控';
+	l10nStrings.debugBarDeleteWatch = '删除监控';
+	l10nStrings.debugBarWatchAll    = '监控全部';
+	l10nStrings.debugBarWatchNone   = '删除全部';
+	l10nStrings.debugBarLabelAdd    = '添加';
+	l10nStrings.debugBarLabelWatch  = '监控';
+	l10nStrings.debugBarLabelTurn   = '调整'; // (noun) chance to act (in a game), moment, period
+	l10nStrings.debugBarLabelViews  = '视图';
+	l10nStrings.debugBarViewsToggle = '切换调试视图';
+	l10nStrings.debugBarWatchToggle = '切换监控面板';
 
 	/* UI bar. */
 	l10nStrings.uiBarToggle   = '打开/关闭导航栏';
@@ -71,6 +83,33 @@
 	l10nStrings.savesUnavailable = '未找到存档插槽\u2026';
 	l10nStrings.savesUnknownDate = '未知';
 
+
+	/*
+		idb related
+	*/
+	l10nStrings.savesDisallowedReplay     = '目前正在使用场景查看器，无法正常保存。';
+	l10nStrings.savesExportReminder       = '警告：如果你清除了浏览器缓存，此处的存档也将丢失！请定时导出存档！';
+	l10nStrings.savesHeaderSaveLoad       = '保存/加载';
+	l10nStrings.savesHeaderIDName         = 'ID/名称';
+	l10nStrings.savesHeaderDetails        = '描述';
+	l10nStrings.savesDescTitle            = '标题：';
+	l10nStrings.savesDescName             = '存档名：';
+	l10nStrings.savesDescId               = '存档 ID：';
+	l10nStrings.savesDescDate             = '日期：';
+	l10nStrings.savesPagerJump            = '跳转到最近一次手动保存';
+	l10nStrings.savesPagerPage            = '页数：';
+	l10nStrings.savesPagerSavesPerPage    = '每页存档个数：';
+	l10nStrings.savesOptionsConfirmOn     = '保存时需要确认';
+	l10nStrings.savesOptionsOverwrite     = '覆盖';
+	l10nStrings.savesOptionsUseLegacy     = '使用旧版储存方式';
+	l10nStrings.savesWarningSaveOnSlot    = '保存存档到槽 ';
+	l10nStrings.savesWarningOverwriteSlot = '覆盖存档到槽 ';
+	l10nStrings.savesWarningOverwriteID   = '存档 ID 不匹配，是否继续覆盖？';
+	l10nStrings.savesWarningDeleteInSlot  = '删除存档槽：';
+	l10nStrings.savesWarningLoad          = '加载存档槽：';
+	l10nStrings.savesWarningDeleteAll     = '警告：你确定要删除所有存档吗？';
+	l10nStrings.savesLabelToClipboard     = '保存至剪贴板\u2026';
+
 	/* Settings. */
 	l10nStrings.settingsTitle = '设置';
 	l10nStrings.settingsOff   = '关闭';
@@ -84,6 +123,11 @@
 	/* Share. */
 	l10nStrings.shareTitle = '分享';
 
+	/*
+		Alert.
+	*/
+	l10nStrings.alertTitle = '警告';
+
 	/* Autoload. */
 	l10nStrings.autoloadTitle  = '自动保存';
 	l10nStrings.autoloadCancel = '前往最初的段落';
@@ -93,39 +137,4 @@
 	/* Macros. */
 	l10nStrings.macroBackText   = '返回';
 	l10nStrings.macroReturnText = '返回';
-
-	/* idb_backend.js */
-	l10nStrings.idbHtmlSaveLoadButton            = '保存/加载';
-	l10nStrings.idbHtmlSaveName                  = 'ID/名称';
-	l10nStrings.idbHtmlSaveDetails               = '描述';
-	l10nStrings.idbHtmlClearButton               = '删除全部';
-	l10nStrings.idbHtmlSaveButton                = '保存';
-	l10nStrings.idbHtmlLoadButton                = '加载';
-	l10nStrings.idbHtmlDeleteButton              = '删除';
-	l10nStrings.idbHtmlCancelButton              = '取消';
-	l10nStrings.idbHtmlSaveTitle                 = '标题：';
-	l10nStrings.idbHtmlSaveSlotName              = '存档名：';
-	l10nStrings.idbHtmlSaveId                    = '存档 ID：';
-	l10nStrings.idbHtmlSaveDateTime              = '日期：';
-	l10nStrings.idbCannotSaveReplayScene         = '目前正在使用场景查看器，无法正常保存。';
-	l10nStrings.idbCannotSave                    = "你现在无法存档！";
-	l10nStrings.idbSaveWillLost                  = '此处的存档皆暂存于浏览器缓存中，清除浏览器缓存将导致存档丢失。建议定期导出存档以防游戏进度丢失。';
-	l10nStrings.idbLostSaves                     = '我存档呢？';
-	l10nStrings.idbLostSavesTooltip              = '你找不到存档的原因可能是你的保存方式不同。试试修改存档列表最下方的“使用旧版储存方式”选项。';
-	l10nStrings.idbJumpToLatestButton            = '跳转到最近一次手动保存';
-	l10nStrings.idbHtmlPager                     = '页数：';
-	l10nStrings.idbHtmlPagerP                    = '每页存档个数：';
-	l10nStrings.idbHtmlRequireConfirmationSave   = '保存时需要确认';
-	l10nStrings.idbHtmlRequireConfirmationLoad   = '加载时需要确认';
-	l10nStrings.idbHtmlRequireConfirmationDelete = '删除时需要确认';
-	l10nStrings.idbHtmlUseLegacy                 = '使用旧版储存方式';
-	l10nStrings.idbHtmlConfirmSave               = '保存存档到槽 ';
-	l10nStrings.idbHtmlConfirmSaveOverwrite      = '覆盖存档到槽 ';
-	l10nStrings.idbHtmlConfirmSaveIdNotMatch     = '存档 ID 不匹配，是否继续覆盖？';
-	l10nStrings.idbHtmlConfirmDelete             = '删除存档槽： ';
-	l10nStrings.idbHtmlConfirmDeleteAuto         = '自动存档槽';
-	l10nStrings.idbHtmlConfirmLoad               = '加载存档槽： ';
-	l10nStrings.idbHtmlConfirmLoadAuto           = '自动存档槽';
-	l10nStrings.idbHtmlConfirmClearWARNING       = '警告：你确定要删除所有存档吗？';
-	l10nStrings.idbHtmlConfirmClearAll           = '删除所有存档';
 })();

@@ -171,7 +171,6 @@ const Links = (() => {
 						State.random(); // update rng pool
 						const frame = State.history[State.activeIndex]; // active history frame
 						frame.pull = State.prng.pull; // update pull
-						frame.prng = clone(State.prng.state); // and state
 					}
 					Engine.show();
 					break;
