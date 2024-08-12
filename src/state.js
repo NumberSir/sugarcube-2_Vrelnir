@@ -86,10 +86,7 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		if (soft) {
 			const frame = _history[_activeIndex];
 			if (!frame) return false;
-			const states = Config.history.maxSessionStates;
-			Config.history.maxSessionStates = 0; // prevent writes into sessionStorage
 			momentActivate(frame);
-			Config.history.maxSessionStates = states;
 			return true;
 		}
 
@@ -252,9 +249,8 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 	function getSessionState() {
 		if (Config.history.maxSessionStates === 0) return;
 
-		const sessionState = session.get("state");
-		// if (Object.hasOwn(sessionState, "delta")) {
-		if (sessionState.hasOwnProperty("delta")) {
+		const sessionState = session.get('state');
+		if (sessionState.hasOwnProperty('delta')) {
 			sessionState.history = State.deltaDecode(sessionState.delta);
 			delete sessionState.delta;
 		}
@@ -268,7 +264,7 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 	 * @param {object} sessionState decoded session state
 	 */
 	function setSessionState(sessionState) {
-		if (!sessionState || !sessionState.history) throw new Error("setSessionState error: not a valid sessionState object");
+		if (!sessionState || !sessionState.history) throw new Error('setSessionState error: not a valid sessionState object');
 		let pass = false;
 		let sstates = Config.history.maxSessionStates;
 		if (sstates === 0) return pass;
@@ -276,27 +272,23 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		try {
 			// if history is bigger than session states limit, reduce the history to match
 			if (sessionState.history.length > sstates) reduceHistorySize(sessionState, sstates);
-			if (sstates) session.set("state", sessionState); // don't do session writes if sstates is 0, NaN, undefined, etc.
+			if (sstates) session.set('state', sessionState); // don't do session writes if sstates is 0, NaN, undefined, etc.
 			pass = true;
 		}
 		catch (ex) {
-			console.log("session.set failed, recovering");
+			console.log('session.set failed, recovering');
 			if (sstates > sessionState.history.length) sstates = sessionState.length;
 			while (sstates && !pass) {
 				try {
 					sstates--;
 					reduceHistorySize(sessionState, sstates);
-					session.set("state", sessionState);
+					session.set('state', sessionState);
 					pass = true;
 				}
 				catch (ex) {
 					continue;
 				}
 			}
-			Config.history.maxSessionStates = sstates;
-			if (V.options) V.options.maxSessionStates = sstates;
-			// eslint-disable-next-line no-undef
-			if (Errors) Errors.report("Save data is too big for current History depth setting. It's value was automatically adjusted to " + sstates);
 		}
 		return pass;
 	}
@@ -385,27 +377,6 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		/*
-			Update the active session.
-		*/
-		let pass = false;
-		while (Config.history.maxSessionStates > 0 && !pass) {
-			try {
-				session.set('state', stateMarshal());
-				pass = true;
-			}
-			catch { // maxSessionStates is too high to fit sessionStorage
-				console.log('session.set error, reducing maxSessionStates');
-				// eslint-disable-next-line max-len
-				if (Config.history.maxSessionStates > State.history.length) Config.history.maxSessionStates = State.history.length;
-				Config.history.maxSessionStates--;
-				if (window.Errors) { // call dol-specific errors reporter if available
-					window.Errors.report(`Save data is too big for current history depth setting. It's value was auto-adjusted to ${Config.history.maxSessionStates}`);
-					if (window.V && window.V.options) window.V.options.maxStates = Config.history.maxSessionStates; // and limit history depth as well
-				}
-			}
-		}
-
-		/*
 			Trigger a global `:historyupdate` event.
 
 			NOTE: We do this here because setting a new active moment is a core component
@@ -415,6 +386,27 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		return _active;
 	}
+
+	function updateSession() {
+		/*
+			Update the active session.
+			todo: refactor it all and move to using setSessionState?
+		*/
+		let pass = false;
+		let depth = Math.min(Config.history.maxSessionStates, State.history.length);
+		while (depth > 0 && !pass) {
+			try {
+				session.set('state', stateMarshal(false, depth));
+				pass = true;
+			}
+			catch { // depth is too high to fit sessionStorage
+				console.log('session.set error, reducing maxSessionStates');
+				depth--;
+			}
+		}
+	}
+	// save game state to load it back after f5
+	window.addEventListener('beforeunload', updateSession);
 
 
 	/*******************************************************************************************************************
@@ -637,44 +629,6 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		for (let i = 1, iend = delta.length; i < iend; ++i) {
 			historyArr.push(Diff.patch(historyArr[i - 1], delta[i]));
 		}
-
-		return historyArr;
-	}
-
-	/**
-	 * encodes history array with jsondiffpatch delta, as default diff has
-	 * no mechanism for finding changes in objects and arrays.
-	 *
-	 * @param {array} historyArr
-	 * @returns {array} jdelta
-	 */
-	function historyjDeltaEncode(historyArr) {
-		if (!Array.isArray(historyArr)) return null;
-		if (historyArr.length === 0) return [];
-
-		const jdelta = [];
-		for (let i = 1, iend = historyArr.length; i < iend; ++i) {
-			jdelta.push(jsondiffpatch.diff(historyArr[i - 1], historyArr[i]));
-		}
-
-		return jdelta;
-	}
-
-	/**
-	 * restores history array from jdelta
-	 *
-	 * @param {array} jdelta jsondiffpatch delta-encoded array
-	 * @returns {array}
-	 */
-	function historyjDeltaDecode(delta, jdelta) {
-		if (!Array.isArray(delta)) return null;
-		if (delta.length === 0) return [];
-		if (!jdelta) return delta;
-
-		const historyArr = [clone(delta[0])];
-
-		// jsondiffpatch.patch() modifies the first argument, cloning is necessary
-		for (const i in jdelta) historyArr.push(jsondiffpatch.patch(clone(historyArr[i]), jdelta[i]));
 
 		return historyArr;
 	}
@@ -917,8 +871,6 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		go          : { value : historyGo },
 		deltaEncode : { value : historyDeltaEncode },
 		deltaDecode : { value : historyDeltaDecode },
-		jdeltaEncode: { value : historyjDeltaEncode },
-		jdeltaDecode: { value : historyjDeltaDecode },
 
 		/*
 			PRNG Functions.
