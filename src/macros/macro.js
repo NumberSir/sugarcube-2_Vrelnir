@@ -58,7 +58,9 @@ var Macro = (() => { // eslint-disable-line no-unused-vars, no-var
 					def.handler = function (...args) {
 						const pIn = Wikifier.lastPassageQPush(
 							def.PassageObj,
-							def.PassageTitle
+							def.PassageTitle,
+							def.OriginHandlerPassageQBalance.toString(),
+							this
 						);
 
 						def.OriginHandlerPassageQBalance.apply(this, args);

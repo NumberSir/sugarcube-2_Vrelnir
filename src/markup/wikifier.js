@@ -28,7 +28,7 @@ var Wikifier = (() => { // eslint-disable-line no-unused-vars, no-var
 	let _passageObjLast = undefined;
 
 	/**
-	 * @type { { passageObj: Passage , passageTitle: String }[] }
+	 * @type { { passageObj?: Passage , passageTitle: String , source?: string , macroThis?: MacroContext  }[] }
 	 * @private
 	 */
 	let _lastPassageQ = [];
@@ -49,7 +49,7 @@ var Wikifier = (() => { // eslint-disable-line no-unused-vars, no-var
 					console.error('Wikifier constructor(): _callDepth === 0, but _lastPassageQ is not empty.', _lastPassageQ);
 				}
 				_lastPassageQ = [];
-				_lastPassageQ.push({ passageObj : _passageObjLast, passageTitle : _passageTitleLast });
+				_lastPassageQ.push({ passageObj : _passageObjLast, passageTitle : _passageTitleLast, source });
 				// before passage hook
 				if (typeof window.modSC2DataManager !== 'undefined' &&
 					window.modSC2DataManager.getWikifyTracer?.().beforePassage
@@ -62,13 +62,13 @@ var Wikifier = (() => { // eslint-disable-line no-unused-vars, no-var
 				if (passageObj || passageTitle) {
 					_passageTitleLast = passageObj ? passageObj.title : passageTitle;
 					_passageObjLast = passageObj;
-					_lastPassageQ.push({ passageObj, passageTitle });
+					_lastPassageQ.push({ passageObj, passageTitle, source });
 				}
 				else {
 					const lp = _lastPassageQ.last();
 					_passageTitleLast = lp.passageTitle;
 					_passageObjLast = lp.passageObj;
-					_lastPassageQ.push({ _passageObjLast, _passageTitleLast });
+					_lastPassageQ.push({ _passageObjLast, _passageTitleLast, source });
 				}
 			}
 
@@ -210,8 +210,9 @@ var Wikifier = (() => { // eslint-disable-line no-unused-vars, no-var
 			}
 		}
 
-		static lastPassageQPush(passageObj, passageTitle) {
-			_lastPassageQ.push({ passageObj, passageTitle });
+		static lastPassageQPush(passageObj, passageTitle, source, macroThis) {
+			// console.log('lastPassageQPush', [passageObj, passageTitle, source, macroThis, structuredClone(macroThis), structuredClone(_lastPassageQ)]);
+			_lastPassageQ.push({ passageObj, passageTitle, source, macroThis : macroThis });
 			// before push
 			return _lastPassageQ.length - 1;
 		}
