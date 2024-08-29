@@ -242,6 +242,11 @@ var Wikifier = (() => { // eslint-disable-line no-unused-vars, no-var
 			}
 		}
 
+		static getLastPassageQ() {
+			// copy a new array
+			return _lastPassageQ.map(T => T);
+		}
+
 		// eslint-disable-next-line no-unused-vars
 		subWikify(output, terminator, options, passageObj) {
 			// Placed at top to prevent any execution
