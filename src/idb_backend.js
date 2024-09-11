@@ -631,7 +631,7 @@ const idb = (() => {
 		exportButton.className = "ui-close";
 		exportButton.innerText = L10n.get("savesLabelExport");
 		if (savesAllowed()) {
-			exportButton.onclick = Save.export;
+			exportButton.onclick = () => Save.export();
 			exportButton.classList.add("saveMenuButton");
 		} else exportButton.disabled = true;
 		li = document.createElement("li");
@@ -661,7 +661,10 @@ const idb = (() => {
 		importButton.id = "saves-import";
 		importButton.className = "saveMenuButton";
 		importButton.innerText = L10n.get("savesLabelImport");
-		importButton.onclick = () => jQuery(document.createElement("input")).prop("type", "file").on("change", SugarCube.Save.import).trigger("click"); // gotta give it to anthaum for finding this
+		importButton.onclick = () => {
+			jQuery(document.createElement("input")).prop("type", "file").on("change", SugarCube.Save.import).trigger("click"); // gotta give it to anthaum for finding this
+			window.closeOverlay();
+		}
 		li = document.createElement("li");
 		li.appendChild(importButton);
 		container.appendChild(li);
@@ -910,7 +913,7 @@ const idb = (() => {
 			mode = "show saves";
 		}
 
-		await new Promise(r => setTimeout(0, r(true))); // this actually ensures that #saveList had time to render into DOM
+		await new Promise(r => setTimeout(() => r(true), 0)); // this actually ensures that #saveList had time to render into DOM
 		const savesDiv = document.getElementById("saveList") || document.getElementsByClassName("saveList")[0] || document.getElementsByClassName("saves")[0];
 		const list = document.createDocumentFragment();
 
