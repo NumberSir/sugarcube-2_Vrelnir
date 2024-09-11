@@ -3786,7 +3786,6 @@
 		tags : null,
 
 		handler() {
-			console.warn('Macro widget macroThis', this.args[0], this);
 			if (this.args.length === 0) {
 				return this.error('no widget name specified');
 			}
